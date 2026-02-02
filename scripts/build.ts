@@ -5,7 +5,7 @@ await esbuild.build({
   entryPoints: ["src/index.ts"],
   bundle: true,
   platform: "node",
-  format: "esm",
+  format: "cjs",
   outfile: "dist/index.js",
   alias: {
     "@": path.resolve(import.meta.dirname, "../src"),

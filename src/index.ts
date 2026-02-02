@@ -1,7 +1,18 @@
-import { createLogger, enquirer, which } from "@/utils";
+import { createLogger, which, select } from "@/utils";
 import { t, setLocale, detectLocale, type Locale } from "@/i18n";
 
 const logger = createLogger("App");
+
+class CancelledError extends Error {
+  constructor() {
+    super("Cancelled");
+    this.name = "CancelledError";
+  }
+}
+
+function isCancelledError(err: unknown): err is CancelledError {
+  return err instanceof CancelledError;
+}
 
 interface AppContext {
   abortController: AbortController;
@@ -25,15 +36,13 @@ async function selectLanguage(): Promise<Locale> {
   const detected = detectLocale();
   logger.debug(`Detected system locale: ${detected}`);
 
-  const { locale } = await enquirer.prompt<{ locale: Locale }>({
-    type: "select",
-    name: "locale",
+  const locale = await select({
     message: "Language / 语言",
     choices: [
-      { name: "en", message: "English" },
-      { name: "zh_CN", message: "简体中文" },
+      { value: "en" as const, name: "English" },
+      { value: "zh_CN" as const, name: "简体中文" },
     ],
-    initial: detected === "zh_CN" ? 1 : 0,
+    default: detected,
   });
 
   return locale;
@@ -76,13 +85,10 @@ async function shutdown(ctx: AppContext, reason: string): Promise<void> {
 }
 
 function setupSignalHandlers(ctx: AppContext): void {
-  const handler = (signal: string) => {
-    logger.warn(`Received ${signal}`);
-    shutdown(ctx, signal).finally(() => process.exit(0));
-  };
-
-  process.on("SIGINT", () => handler("SIGINT"));
-  process.on("SIGTERM", () => handler("SIGTERM"));
+  process.on("SIGTERM", () => {
+    logger.warn("Received SIGTERM");
+    shutdown(ctx, "SIGTERM").finally(() => process.exit(0));
+  });
 }
 
 async function main(): Promise<void> {
@@ -92,6 +98,10 @@ async function main(): Promise<void> {
     await run(ctx);
     await shutdown(ctx, "completed");
   } catch (err) {
+    if (isCancelledError(err)) {
+      if (ctx) await shutdown(ctx, "cancelled");
+      return;
+    }
     logger.error(err instanceof Error ? err.message : String(err));
     if (ctx) await shutdown(ctx, "error");
     process.exit(1);
