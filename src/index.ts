@@ -1,4 +1,4 @@
-import { createLogger, which, select } from "@/utils";
+import { createLogger, which, select, ora, chalk, symbols } from "@/utils";
 import { t, setLocale, detectLocale, type Locale } from "@/i18n";
 
 const logger = createLogger("App");
@@ -57,18 +57,18 @@ async function run(ctx: AppContext): Promise<void> {
   logger.info(`Language set to: ${ctx.locale}`);
 
   console.log();
-  console.log(t("welcome"));
+  console.log(chalk.bold(t("welcome")));
   console.log();
 
   // Step 2: Check openclaw executable
-  console.log(t("checking_openclaw"));
+  const spinner = ora(t("checking_openclaw")).start();
   const openclawPath = which("openclaw");
   if (!openclawPath) {
-    console.log(t("openclaw_not_found"));
+    spinner.fail(t("openclaw_not_found"));
     process.exit(1);
   }
   ctx.openclawPath = openclawPath;
-  console.log(t("openclaw_found", { path: openclawPath }));
+  spinner.succeed(t("openclaw_found", { path: openclawPath }));
   console.log();
 
   // TODO: next steps

@@ -30,7 +30,10 @@ This is a CLI tool for configuring OpenClaw (Linux). TypeScript source compiles 
 - **`src/utils/`** - Utilities barrel export
   - `logger.ts` - `createLogger(name)` with level filtering via `LOG_LEVEL` env
   - `system.ts` - `which()` for executable lookup
-  - `inquirer` - Re-exported from inquirer for terminal prompts
+  - `select` - Interactive prompts (`@inquirer/prompts`)
+  - `ora` - Spinner for process status
+  - `chalk` - Text styling/colors
+  - `symbols` - Result feedback icons (✔ ✖ ⚠ ℹ)
 
 - **`src/i18n/`** - Internationalization
   - `t(key, params?)` for translations with `{placeholder}` support
