@@ -1,5 +1,5 @@
 export { logger, createLogger, type Logger } from "./logger";
-export { which } from "./system";
+export { which, fileExists, getOpenclawConfigPath } from "./system";
 export { select } from "@inquirer/prompts";
 export { default as ora, oraPromise } from "ora";
 export { default as chalk } from "chalk";
