@@ -1,9 +1,13 @@
 services:
   dev:
     image: node:lts
-    command: ['sh']
+    command: ['tail', '-f', '/dev/null']
     tty: true
     stop_grace_period: 0s
     network_mode: host
+    environment:
+      - http_proxy=http://127.0.0.1:7890
+      - https_proxy=http://127.0.0.1:7890
+      - all_proxy=http://127.0.0.1:7890
     volumes:
       - ./dist:/dist
