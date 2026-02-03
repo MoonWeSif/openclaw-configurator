@@ -233,3 +233,24 @@ export function triggerGatewayRestart(): void {
 
   writeOpenclawConfig(openclawConfig);
 }
+
+/**
+ * Get configured models from agents.defaults.models
+ * Returns array of model keys (e.g., ["openai/gpt-5.2", "anthropic/claude-opus-4-5-20251101"])
+ */
+export function getConfiguredModels(): string[] {
+  const config = readOpenclawConfig();
+  const models = config.agents?.defaults?.models;
+  if (!models) {
+    return [];
+  }
+  return Object.keys(models);
+}
+
+/**
+ * Get current primary model from agents.defaults.model.primary
+ */
+export function getPrimaryModel(): string | null {
+  const config = readOpenclawConfig();
+  return config.agents?.defaults?.model?.primary ?? null;
+}

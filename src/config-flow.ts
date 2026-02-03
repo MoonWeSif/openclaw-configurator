@@ -8,6 +8,8 @@ import {
   fetchModels,
   filterModelsByVendor,
   isSupportedProvider,
+  getConfiguredModels,
+  getPrimaryModel,
   VENDOR_FILTERS,
   runMenu,
   MENU_EXIT,
@@ -153,6 +155,34 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
   await runOperations(ctx, operations);
 }
 
+async function selectConfiguredModel(ctx: MenuContext): Promise<void> {
+  const configuredModels = getConfiguredModels();
+  if (configuredModels.length === 0) {
+    console.log(`${symbols.warning} ${t("no_configured_models")}`);
+    return;
+  }
+
+  const currentModel = getPrimaryModel();
+
+  const selected = await runMenu<string>({
+    message: t("select_configured_model"),
+    items: configuredModels.map((modelKey) => ({
+      label:
+        modelKey === currentModel
+          ? `${modelKey} ${t("current_model_hint")}`
+          : modelKey,
+      value: modelKey,
+    })),
+  });
+
+  if (!selected || selected === currentModel) {
+    return;
+  }
+
+  ctx.logger.debug(`Selected model: ${selected}`);
+  await runOperations(ctx, [createSetModel(selected)]);
+}
+
 export async function runConfigLoop(): Promise<void> {
   const ctx: MenuContext = { logger };
 
@@ -165,6 +195,16 @@ export async function runConfigLoop(): Promise<void> {
         label: t("config_action_add"),
         value: "add",
         action: configureProvider,
+      },
+      {
+        label: t("config_action_modify"),
+        value: "modify",
+        action: configureProvider,
+      },
+      {
+        label: t("config_action_select_model"),
+        value: "select_model",
+        action: selectConfiguredModel,
       },
       {
         label: t("config_action_exit"),

@@ -7,6 +7,8 @@ export {
   setModel,
   triggerGatewayRestart,
   isSupportedProvider,
+  getConfiguredModels,
+  getPrimaryModel,
   VENDOR_FILTERS,
   type OpenclawModel,
   type OpenclawModelsResult,
