@@ -19,6 +19,7 @@
   "fetching_models_failed": "获取模型列表失败",
   "no_models_available": "没有可用的支持模型 (openai/anthropic)",
   "select_model": "选择要添加的模型",
+  "saving_provider_config": "正在保存供应商配置...",
   "provider_config_saved": "供应商配置已保存: {provider}",
   "provider_config_failed": "保存供应商配置失败"
 }

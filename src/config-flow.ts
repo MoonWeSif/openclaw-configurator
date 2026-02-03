@@ -110,16 +110,15 @@ async function configureProvider(): Promise<void> {
   }
 
   const providerBaseUrl = getProviderBaseUrl(baseUrl, provider);
+  const saveSpinner = ora(t("saving_provider_config")).start();
   try {
     setProviderConfig(provider, {
       baseUrl: providerBaseUrl,
       models: [],
     });
-    console.log(
-      `${symbols.success} ${t("provider_config_saved", { provider })}`
-    );
+    saveSpinner.succeed(t("provider_config_saved", { provider }));
   } catch (err) {
-    console.log(`${symbols.error} ${t("provider_config_failed")}`);
+    saveSpinner.fail(t("provider_config_failed"));
     logger.error(err instanceof Error ? err.message : String(err));
   }
 }

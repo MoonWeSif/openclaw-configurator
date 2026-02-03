@@ -19,6 +19,7 @@
   "fetching_models_failed": "Failed to fetch models",
   "no_models_available": "No supported models available (openai/anthropic)",
   "select_model": "Select model to add",
+  "saving_provider_config": "Saving provider configuration...",
   "provider_config_saved": "Provider configuration saved: {provider}",
   "provider_config_failed": "Failed to save provider configuration"
 }
