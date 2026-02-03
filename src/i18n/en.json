@@ -7,5 +7,18 @@
   "operation_completed": "Operation completed",
   "checking_openclaw": "Checking openclaw executable...",
   "openclaw_found": "openclaw found: {path}",
-  "openclaw_not_found": "openclaw not found. Please ensure openclaw is installed and in your PATH."
+  "openclaw_not_found": "openclaw not found. Please ensure openclaw is installed and in your PATH.",
+  "config_action_prompt": "What would you like to do?",
+  "config_action_add": "Add provider",
+  "config_action_exit": "Exit",
+  "select_vendor": "Select vendor",
+  "vendor_packycode": "PackyCode",
+  "vendor_other": "Other",
+  "input_base_url": "Enter base URL",
+  "fetching_models": "Fetching available models...",
+  "fetching_models_failed": "Failed to fetch models",
+  "no_models_available": "No supported models available (openai/anthropic)",
+  "select_model": "Select model to add",
+  "provider_config_saved": "Provider configuration saved: {provider}",
+  "provider_config_failed": "Failed to save provider configuration"
 }

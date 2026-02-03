@@ -1,5 +1,6 @@
 import { createLogger, which, select, ora, chalk, symbols } from "@/utils";
 import { t, setLocale, detectLocale, type Locale } from "@/i18n";
+import { runConfigLoop } from "@/config-flow";
 
 const logger = createLogger("App");
 
@@ -71,7 +72,8 @@ async function run(ctx: AppContext): Promise<void> {
   spinner.succeed(t("openclaw_found", { path: openclawPath }));
   console.log();
 
-  // TODO: next steps
+  // Step 3: Configuration loop
+  await runConfigLoop();
 }
 
 async function shutdown(ctx: AppContext, reason: string): Promise<void> {
