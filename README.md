@@ -17,8 +17,10 @@ An interactive CLI tool for configuring [OpenClaw](https://github.com/openclaw/o
 Run directly without installation:
 
 ```bash
-curl -fsSL https://github.com/packyme/openclaw-configurator/releases/latest/download/index.js | node
+curl -fsSL https://github.com/packyme/openclaw-configurator/releases/latest/download/index.js -o /tmp/openclaw-config.js && node /tmp/openclaw-config.js
 ```
+
+> **Note:** This tool requires interactive terminal input. Do not use `curl ... | node` as stdin will be occupied by the pipe.
 
 ## Prerequisites
 

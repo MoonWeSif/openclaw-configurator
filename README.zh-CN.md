@@ -17,8 +17,10 @@
 无需安装，直接运行：
 
 ```bash
-curl -fsSL https://github.com/packyme/openclaw-configurator/releases/latest/download/index.js | node
+curl -fsSL https://github.com/packyme/openclaw-configurator/releases/latest/download/index.js -o /tmp/openclaw-config.js && node /tmp/openclaw-config.js
 ```
+
+> **注意：** 本工具需要交互式终端输入，请勿使用 `curl ... | node` 方式运行，否则 stdin 会被管道占用导致无法输入。
 
 ## 前置要求
 
