@@ -29,8 +29,10 @@ import {
 const logger = createLogger("ConfigFlow");
 
 const PACKYCODE_BASE_URL = "https://www.packyapi.com";
+const PACKYCODE_CODEX_BASE_URL = "https://codex-api.packycode.com";
 
 type Vendor = "packycode" | "other";
+type PackyCodeServiceType = "api" | "codex";
 
 async function selectVendor(): Promise<Vendor | null> {
   return runMenu<Vendor>({
@@ -42,9 +44,22 @@ async function selectVendor(): Promise<Vendor | null> {
   });
 }
 
-async function getBaseUrl(vendor: Vendor): Promise<string | null> {
+async function selectPackyCodeServiceType(): Promise<PackyCodeServiceType | null> {
+  return runMenu<PackyCodeServiceType>({
+    message: t("select_service_type"),
+    items: [
+      { label: t("service_type_api"), value: "api" },
+      { label: t("service_type_codex"), value: "codex" },
+    ],
+  });
+}
+
+async function getBaseUrl(
+  vendor: Vendor,
+  serviceType?: PackyCodeServiceType
+): Promise<string | null> {
   if (vendor === "packycode") {
-    return PACKYCODE_BASE_URL;
+    return serviceType === "codex" ? PACKYCODE_CODEX_BASE_URL : PACKYCODE_BASE_URL;
   }
   try {
     return await escInput({
@@ -88,19 +103,34 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
   }
   ctx.logger.debug(`Selected vendor: ${vendor}`);
 
-  // Step 2: Get base URL
-  const baseUrl = await getBaseUrl(vendor);
+  // Step 2: Select service type (PackyCode only)
+  let serviceType: PackyCodeServiceType | undefined;
+  if (vendor === "packycode") {
+    const selected = await selectPackyCodeServiceType();
+    if (!selected) {
+      return;
+    }
+    serviceType = selected;
+    ctx.logger.debug(`Selected service type: ${serviceType}`);
+  }
+
+  // Step 3: Get base URL
+  const baseUrl = await getBaseUrl(vendor, serviceType);
   if (!baseUrl) {
     return;
   }
   ctx.logger.debug(`Base URL: ${baseUrl}`);
 
-  // Step 3: Fetch and filter models
+  // Step 4: Fetch and filter models
   const spinner = ora(t("fetching_models")).start();
   let filteredModels: OpenclawModel[];
   try {
     const result = fetchModels();
     filteredModels = filterModelsByVendor(result.models, vendor);
+    // Codex service type: only show openai/ models (GPT series)
+    if (serviceType === "codex") {
+      filteredModels = filteredModels.filter((m) => m.key.startsWith("openai/"));
+    }
     spinner.succeed();
   } catch (err) {
     spinner.fail(t("fetching_models_failed"));
@@ -113,14 +143,14 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
     return;
   }
 
-  // Step 4: Select model
+  // Step 5: Select model
   const selectedModel = await selectModel(filteredModels);
   if (!selectedModel) {
     return;
   }
   ctx.logger.debug(`Selected model: ${selectedModel.key}`);
 
-  // Step 5: Determine provider
+  // Step 6: Determine provider
   const vendorFilter = VENDOR_FILTERS[vendor];
   const allowedProviders = vendorFilter?.providers.length
     ? vendorFilter.providers
@@ -130,7 +160,7 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
     return;
   }
 
-  // Step 6: Get API key
+  // Step 7: Get API key
   let apiKey: string;
   try {
     apiKey = await escPassword({
@@ -144,7 +174,7 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
     throw err;
   }
 
-  // Step 7: Save config via operations (auto restart included)
+  // Step 8: Save config via operations (auto restart included)
   const providerBaseUrl = getProviderBaseUrl(baseUrl, provider);
   const operations: Operation[] = [
     createSetProviderConfig(provider, providerBaseUrl),

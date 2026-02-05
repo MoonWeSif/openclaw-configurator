@@ -59,7 +59,7 @@ async function run(ctx: AppContext): Promise<void> {
   logger.info(`Language set to: ${ctx.locale}`);
 
   console.log();
-  console.log(chalk.bold(t("welcome")), chalk.dim(__APP_VERSION__));
+  console.log(chalk.bold(t("welcome")), chalk.dim(__APP_VERSION__ ?? "dev"));
   console.log();
 
   // Step 2: Check openclaw executable

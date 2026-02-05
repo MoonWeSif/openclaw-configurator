@@ -53,6 +53,7 @@ export type SupportedProvider = (typeof SUPPORTED_PROVIDERS)[number];
 
 // PackyCode supported models (model name suffix after provider prefix)
 const PACKYCODE_MODELS = [
+  // Claude models
   "claude-3-5-haiku-20241022",
   "claude-3-5-sonnet-20240620",
   "claude-3-5-sonnet-20241022",
@@ -63,15 +64,42 @@ const PACKYCODE_MODELS = [
   "claude-opus-4-5-20251101",
   "claude-sonnet-4-20250514",
   "claude-sonnet-4-5-20250929",
+  // GPT models
   "gpt-4o-mini",
   "gpt-5",
   "gpt-5-codex",
+  "gpt-5-codex-high",
+  "gpt-5-codex-low",
+  "gpt-5-codex-medium",
+  "gpt-5-codex-mini",
+  "gpt-5-codex-mini-high",
+  "gpt-5-codex-mini-medium",
+  "gpt-5-high",
+  "gpt-5-low",
+  "gpt-5-medium",
+  "gpt-5-minimal",
   "gpt-5-pro",
   "gpt-5.1",
   "gpt-5.1-codex",
   "gpt-5.1-codex-max",
+  "gpt-5.1-codex-max-high",
+  "gpt-5.1-codex-max-xhigh",
+  "gpt-5.1-codex-mini",
+  "gpt-5.1-high",
+  "gpt-5.1-low",
+  "gpt-5.1-medium",
+  "gpt-5.1-minimal",
   "gpt-5.2",
+  "gpt-5.2-codex",
+  "gpt-5.2-codex-high",
+  "gpt-5.2-codex-low",
+  "gpt-5.2-codex-medium",
+  "gpt-5.2-codex-xhigh",
+  "gpt-5.2-high",
+  "gpt-5.2-low",
+  "gpt-5.2-medium",
   "gpt-5.2-pro",
+  "gpt-5.2-xhigh",
 ];
 
 export const VENDOR_FILTERS: Record<string, VendorFilter> = {
