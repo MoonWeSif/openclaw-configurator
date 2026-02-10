@@ -1,0 +1,62 @@
+# OpenClaw Configurator
+
+[简体中文](README.zh-CN.md)
+
+An interactive CLI tool for configuring [OpenClaw](https://github.com/openclaw/openclaw) on Linux.
+
+## Features
+
+- 🌍 Multi-language support (English / 简体中文)
+- 🔧 Add AI providers
+- 🔑 Configure API keys securely
+- 🤖 Select and switch between models
+- ⚡ Built-in support for 12API and custom providers
+
+## Quick Start
+
+Run directly without installation:
+
+```bash
+curl -fsSL https://github.com/moonwesif/openclaw-configurator/releases/latest/download/index.js -o /tmp/openclaw-config.js && node /tmp/openclaw-config.js
+```
+
+> **Note:** This tool requires interactive terminal input. Do not use `curl ... | node` as stdin will be occupied by the pipe.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) v22 or higher
+- [OpenClaw](https://github.com/openclaw/openclaw) installed and available in PATH
+
+## Usage
+
+After running the script, you'll be guided through an interactive menu:
+
+1. **Select Language** - Choose English or 简体中文
+2. **Add Provider** - Configure a new AI provider with base URL and API key
+3. **Select Model** - Switch between configured models
+4. **Exit** - Exit the program
+
+### Supported Providers
+
+- **12API** - Pre-configured with `https://cdn.12ai.org`
+- **Other** - Custom providers with OpenAI/Anthropic compatible API
+
+## Development
+
+```bash
+# Install dependencies
+make install
+
+# Run in development mode
+make dev
+
+# Type check and build
+make typecheck build
+
+# Build for production
+make build-prod
+```
+
+## License
+
+MIT
