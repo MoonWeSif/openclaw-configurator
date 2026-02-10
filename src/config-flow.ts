@@ -67,6 +67,9 @@ function getProviderBaseUrl(
   if (provider === "openai") {
     return `${baseUrl}/v1`;
   }
+  if (provider === "google") {
+    return `${baseUrl}/v1beta`;
+  }
   return baseUrl;
 }
 

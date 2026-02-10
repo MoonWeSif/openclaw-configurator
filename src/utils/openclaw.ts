@@ -48,7 +48,7 @@ interface OpenclawConfig {
   [key: string]: unknown;
 }
 
-const SUPPORTED_PROVIDERS = ["openai", "anthropic"] as const;
+const SUPPORTED_PROVIDERS = ["openai", "anthropic", "google"] as const;
 export type SupportedProvider = (typeof SUPPORTED_PROVIDERS)[number];
 
 // 12API supported models (model name suffix after provider prefix)
@@ -61,11 +61,14 @@ const TWELVE_API_MODELS = [
   // GPT models
   "gpt-5.1",
   "gpt-5.2",
+  // Gemini models
+  "gemini-3-pro-preview",
+  "gemini-3-flash-preview",
 ];
 
 export const VENDOR_FILTERS: Record<string, VendorFilter> = {
   "12api": {
-    providers: ["openai", "anthropic"],
+    providers: ["openai", "anthropic", "google"],
     models: TWELVE_API_MODELS,
   },
   other: {

@@ -18,7 +18,7 @@
   "input_base_url": "Enter base URL",
   "fetching_models": "Fetching available models...",
   "fetching_models_failed": "Failed to fetch models",
-  "no_models_available": "No supported models available (openai/anthropic)",
+  "no_models_available": "No supported models available (openai/anthropic/google)",
   "select_model": "Select model to add",
   "select_configured_model": "Select model",
   "no_configured_models": "No models configured. Please add a provider first.",

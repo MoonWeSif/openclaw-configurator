@@ -18,7 +18,7 @@
   "input_base_url": "请输入 Base URL",
   "fetching_models": "正在获取可用模型...",
   "fetching_models_failed": "获取模型列表失败",
-  "no_models_available": "没有可用的支持模型 (openai/anthropic)",
+  "no_models_available": "没有可用的支持模型 (openai/anthropic/google)",
   "select_model": "选择要添加的模型",
   "select_configured_model": "选择模型",
   "no_configured_models": "尚未配置任何模型，请先添加供应商。",
