@@ -29,7 +29,7 @@ async function init(): Promise<AppContext> {
 
   return {
     abortController: new AbortController(),
-    locale: "en",
+    locale: "zh_CN",
     openclawPath: "",
   };
 }
@@ -41,8 +41,8 @@ async function selectLanguage(): Promise<Locale> {
   const locale = await select({
     message: "Language / 语言",
     choices: [
-      { value: "en" as const, name: "English" },
       { value: "zh_CN" as const, name: "简体中文" },
+      { value: "en" as const, name: "English" },
     ],
     default: detected,
   });
