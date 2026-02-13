@@ -26,7 +26,7 @@ export interface ProviderConfig {
 
 export interface VendorFilter {
   providers: SupportedProvider[];
-  models: string[];
+  models: VendorModel[];
 }
 
 interface OpenclawConfig {
@@ -51,24 +51,29 @@ interface OpenclawConfig {
 const SUPPORTED_PROVIDERS = ["openai", "anthropic", "google"] as const;
 export type SupportedProvider = (typeof SUPPORTED_PROVIDERS)[number];
 
-// 12API supported models (model name suffix after provider prefix)
-const TWELVE_API_MODELS = [
+interface VendorModel {
+  name: string;
+  provider: SupportedProvider;
+}
+
+// 12API supported models
+const TWELVE_API_MODELS: VendorModel[] = [
   // Claude models
-  "claude-haiku-4-5-20251001",
-  "claude-opus-4-5-20251101",
-  "claude-opus-4-6",
-  "claude-sonnet-4-5-20250929",
+  { name: "claude-haiku-4-5-20251001", provider: "anthropic" },
+  { name: "claude-opus-4-5-20251101", provider: "anthropic" },
+  { name: "claude-opus-4-6", provider: "anthropic" },
+  { name: "claude-sonnet-4-5-20250929", provider: "anthropic" },
   // GPT models
-  "gpt-5.1",
-  "gpt-5.2",
+  { name: "gpt-5.1", provider: "openai" },
+  { name: "gpt-5.2", provider: "openai" },
   // Other OpenAI-compatible models
-  "MiniMax-M2.5",
-  "glm-5",
-  "kimi-k2.5",
-  "deepseek-v3.2",
+  { name: "MiniMax-M2.5", provider: "openai" },
+  { name: "glm-5", provider: "openai" },
+  { name: "kimi-k2.5", provider: "openai" },
+  { name: "deepseek-v3.2", provider: "openai" },
   // Gemini models
-  "gemini-3-pro-preview",
-  "gemini-3-flash-preview",
+  { name: "gemini-3-pro-preview", provider: "google" },
+  { name: "gemini-3-flash-preview", provider: "google" },
 ];
 
 export const VENDOR_FILTERS: Record<string, VendorFilter> = {
@@ -146,7 +151,10 @@ export function filterModelsByVendor(
     return models;
   }
 
-  return models.filter((m) => {
+  const existingKeys = new Set(models.map((m) => m.key));
+  const modelNames = new Set(filter.models.map((m) => m.name));
+
+  const filtered = models.filter((m) => {
     // Check provider prefix
     const provider = isSupportedProvider(m.key, filter.providers);
     if (!provider) {
@@ -160,8 +168,28 @@ export function filterModelsByVendor(
 
     // Check model name suffix
     const modelSuffix = getModelSuffix(m.key);
-    return filter.models.includes(modelSuffix);
+    return modelNames.has(modelSuffix);
   });
+
+  // Append models defined in vendor filter but missing from openclaw registry
+  for (const vm of filter.models) {
+    const key = `${vm.provider}/${vm.name}`;
+    if (!existingKeys.has(key)) {
+      filtered.push({
+        key,
+        name: vm.name,
+        input: "",
+        contextWindow: 0,
+        local: false,
+        available: true,
+        tags: [],
+        missing: false,
+      });
+      existingKeys.add(key);
+    }
+  }
+
+  return filtered;
 }
 
 export function setProviderConfig(
