@@ -61,6 +61,11 @@ const TWELVE_API_MODELS = [
   // GPT models
   "gpt-5.1",
   "gpt-5.2",
+  // Other OpenAI-compatible models
+  "MiniMax-M2.5",
+  "glm-5",
+  "kimi-k2.5",
+  "deepseek-v3.2",
   // Gemini models
   "gemini-3-pro-preview",
   "gemini-3-flash-preview",
