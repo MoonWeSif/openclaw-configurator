@@ -3,6 +3,7 @@ export {
   createSetProviderConfig,
   createSetApiKey,
   createSetModel,
+  type SetProviderConfigOptions,
   // createTriggerGatewayRestart 不对外暴露，由 runner 自动处理
 } from "./config";
 export { runOperations, type RunOperationsOptions } from "./runner";

@@ -3,20 +3,33 @@ import {
   setModel,
   triggerGatewayRestart,
   type SupportedProvider,
+  type ApiType,
+  type ProviderModelEntry,
 } from "@/utils/openclaw";
 import { setApiKey } from "@/utils/auth";
 import type { Operation } from "./types";
+
+export interface SetProviderConfigOptions {
+  provider: SupportedProvider;
+  baseUrl: string;
+  api?: ApiType;
+  models?: ProviderModelEntry[];
+}
 
 /**
  * 创建设置 Provider 配置的操作
  */
 export function createSetProviderConfig(
-  provider: SupportedProvider,
-  baseUrl: string
+  options: SetProviderConfigOptions
 ): Operation {
   return {
     name: "op_set_provider_config",
-    execute: () => setProviderConfig(provider, { baseUrl, models: [] }),
+    execute: () =>
+      setProviderConfig(options.provider, {
+        baseUrl: options.baseUrl,
+        api: options.api,
+        models: options.models ?? [],
+      }),
   };
 }
 

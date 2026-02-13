@@ -7,6 +7,7 @@ import {
   symbols,
   fetchModels,
   filterModelsByVendor,
+  findVendorModel,
   isSupportedProvider,
   getConfiguredModels,
   getPrimaryModel,
@@ -15,6 +16,7 @@ import {
   MENU_EXIT,
   type OpenclawModel,
   type SupportedProvider,
+  type ApiType,
   type MenuContext,
 } from "@/utils";
 import { t } from "@/i18n";
@@ -62,8 +64,17 @@ async function getBaseUrl(
 
 function getProviderBaseUrl(
   baseUrl: string,
-  provider: SupportedProvider
+  provider: SupportedProvider,
+  api?: ApiType
 ): string {
+  // Custom providers with explicit api type
+  if (api === "openai-completions") {
+    return `${baseUrl}/v1`;
+  }
+  if (api === "anthropic-messages") {
+    return baseUrl;
+  }
+  // Built-in providers
   if (provider === "openai") {
     return `${baseUrl}/v1`;
   }
@@ -125,7 +136,7 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
   }
   ctx.logger.debug(`Selected model: ${selectedModel.key}`);
 
-  // Step 5: Determine provider
+  // Step 5: Determine provider and api type
   const vendorFilter = VENDOR_FILTERS[vendor];
   const allowedProviders = vendorFilter?.providers.length
     ? vendorFilter.providers
@@ -134,6 +145,9 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
   if (!provider) {
     return;
   }
+
+  const vendorModel = findVendorModel(vendor, selectedModel.key);
+  const api = vendorModel?.api;
 
   // Step 6: Get API key
   let apiKey: string;
@@ -150,9 +164,15 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
   }
 
   // Step 7: Save config via operations (auto restart included)
-  const providerBaseUrl = getProviderBaseUrl(baseUrl, provider);
+  const modelSuffix = selectedModel.key.split("/").slice(1).join("/");
+  const providerBaseUrl = getProviderBaseUrl(baseUrl, provider, api);
   const operations: Operation[] = [
-    createSetProviderConfig(provider, providerBaseUrl),
+    createSetProviderConfig({
+      provider,
+      baseUrl: providerBaseUrl,
+      api,
+      models: api ? [{ id: modelSuffix, name: selectedModel.name }] : undefined,
+    }),
     createSetApiKey(provider, apiKey),
     createSetModel(selectedModel.key),
   ];

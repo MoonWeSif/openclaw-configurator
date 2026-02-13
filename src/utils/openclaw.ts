@@ -19,9 +19,17 @@ export interface OpenclawModelsResult {
   models: OpenclawModel[];
 }
 
+export type ApiType = "openai-completions" | "anthropic-messages";
+
 export interface ProviderConfig {
   baseUrl: string;
-  models: string[];
+  api?: ApiType;
+  models: ProviderModelEntry[];
+}
+
+export interface ProviderModelEntry {
+  id: string;
+  name: string;
 }
 
 export interface VendorFilter {
@@ -48,37 +56,41 @@ interface OpenclawConfig {
   [key: string]: unknown;
 }
 
-const SUPPORTED_PROVIDERS = ["openai", "anthropic", "google"] as const;
+const SUPPORTED_PROVIDERS = ["openai", "anthropic", "google", "minimax", "zai", "moonshot", "deepseek"] as const;
 export type SupportedProvider = (typeof SUPPORTED_PROVIDERS)[number];
 
-interface VendorModel {
+export interface VendorModel {
   name: string;
   provider: SupportedProvider;
+  api?: ApiType;
 }
 
 // 12API supported models
 const TWELVE_API_MODELS: VendorModel[] = [
-  // Claude models
+  // Claude models (built-in anthropic provider)
   { name: "claude-haiku-4-5-20251001", provider: "anthropic" },
   { name: "claude-opus-4-5-20251101", provider: "anthropic" },
   { name: "claude-opus-4-6", provider: "anthropic" },
   { name: "claude-sonnet-4-5-20250929", provider: "anthropic" },
-  // GPT models
+  // GPT models (built-in openai provider)
   { name: "gpt-5.1", provider: "openai" },
   { name: "gpt-5.2", provider: "openai" },
-  // Other OpenAI-compatible models
-  { name: "MiniMax-M2.5", provider: "openai" },
-  { name: "glm-5", provider: "openai" },
-  { name: "kimi-k2.5", provider: "openai" },
-  { name: "deepseek-v3.2", provider: "openai" },
-  // Gemini models
+  // MiniMax (anthropic-messages)
+  { name: "MiniMax-M2.5", provider: "minimax", api: "anthropic-messages" },
+  // GLM (anthropic-messages)
+  { name: "glm-5", provider: "zai", api: "anthropic-messages" },
+  // Kimi (anthropic-messages)
+  { name: "kimi-k2.5", provider: "moonshot", api: "anthropic-messages" },
+  // DeepSeek (openai-completions)
+  { name: "deepseek-v3.2", provider: "deepseek", api: "openai-completions" },
+  // Gemini models (built-in google provider)
   { name: "gemini-3-pro-preview", provider: "google" },
   { name: "gemini-3-flash-preview", provider: "google" },
 ];
 
 export const VENDOR_FILTERS: Record<string, VendorFilter> = {
   "12api": {
-    providers: ["openai", "anthropic", "google"],
+    providers: ["openai", "anthropic", "google", "minimax", "zai", "moonshot", "deepseek"],
     models: TWELVE_API_MODELS,
   },
   other: {
@@ -125,6 +137,22 @@ export function isSupportedProvider(
 export function getModelSuffix(key: string): string {
   const slashIndex = key.indexOf("/");
   return slashIndex >= 0 ? key.slice(slashIndex + 1) : key;
+}
+
+/**
+ * Find vendor model definition by model key (e.g., "moonshot/kimi-k2.5")
+ */
+export function findVendorModel(
+  vendor: string,
+  modelKey: string
+): VendorModel | undefined {
+  const filter = VENDOR_FILTERS[vendor];
+  if (!filter) return undefined;
+  const suffix = getModelSuffix(modelKey);
+  const provider = isSupportedProvider(modelKey);
+  return filter.models.find(
+    (m) => m.name === suffix && m.provider === provider
+  );
 }
 
 export function fetchModels(): OpenclawModelsResult {

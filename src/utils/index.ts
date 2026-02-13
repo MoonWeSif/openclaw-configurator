@@ -3,6 +3,7 @@ export { which } from "./system";
 export {
   fetchModels,
   filterModelsByVendor,
+  findVendorModel,
   setProviderConfig,
   setModel,
   triggerGatewayRestart,
@@ -10,11 +11,14 @@ export {
   getConfiguredModels,
   getPrimaryModel,
   VENDOR_FILTERS,
+  type ApiType,
   type OpenclawModel,
   type OpenclawModelsResult,
   type ProviderConfig,
+  type ProviderModelEntry,
   type SupportedProvider,
   type VendorFilter,
+  type VendorModel,
 } from "./openclaw";
 export { setApiKey } from "./auth";
 export {
