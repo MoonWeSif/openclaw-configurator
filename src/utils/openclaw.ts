@@ -72,6 +72,7 @@ const TWELVE_API_MODELS: VendorModel[] = [
   { name: "claude-opus-4-5-20251101", provider: "anthropic" },
   { name: "claude-opus-4-6", provider: "anthropic" },
   { name: "claude-sonnet-4-5-20250929", provider: "anthropic" },
+  { name: "claude-sonnet-4-6", provider: "anthropic" },
   // GPT models (built-in openai provider)
   { name: "gpt-5.1", provider: "openai" },
   { name: "gpt-5.2", provider: "openai" },
@@ -86,6 +87,7 @@ const TWELVE_API_MODELS: VendorModel[] = [
   // Gemini models (built-in google provider)
   { name: "gemini-3-pro-preview", provider: "google" },
   { name: "gemini-3-flash-preview", provider: "google" },
+  { name: "gemini-3.1-pro-preview", provider: "google" },
 ];
 
 export const VENDOR_FILTERS: Record<string, VendorFilter> = {
