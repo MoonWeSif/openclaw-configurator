@@ -15,6 +15,8 @@ make clean      # Remove dist/ and node_modules/
 
 Always run `make typecheck build` after changes to verify types and build succeed.
 
+**Requirements:** Node.js v22+, pnpm
+
 ## Code Style
 
 - **MANDATORY**: Use `spawn`/`spawnSync` instead of `exec`/`execSync` for executing external commands (safer, avoids shell injection)
@@ -29,7 +31,7 @@ This is a CLI tool for configuring OpenClaw (Linux). TypeScript source compiles 
 - `init()` → Create `AppContext` with AbortController
 - `run(ctx)` → Main flow (language selection → openclaw check → config loop)
 - `shutdown(ctx, reason)` → Cleanup and exit
-- Signal handlers for SIGINT/SIGTERM with graceful shutdown
+- Signal handler for SIGTERM with graceful shutdown
 
 ### Operations Module (`src/operations/`)
 
@@ -75,9 +77,9 @@ Wrappers around `@inquirer/prompts` that support ESC key cancellation:
   - `logger.ts` - `createLogger(name)` with level filtering via `LOG_LEVEL` env
   - `system.ts` - `which()` for executable lookup
   - `openclaw.ts` - OpenClaw config management (models, providers, API keys)
-  - `ora` - Spinner for process status
-  - `chalk` - Text styling/colors
-  - `symbols` - Result feedback icons (✔ ✖ ⚠ ℹ)
+  - `ora` - Spinner for process status (re-exported from `ora`)
+  - `chalk` - Text styling/colors (re-exported from `chalk`)
+  - `symbols` - Result feedback icons ✔ ✖ ⚠ ℹ (re-exported from `log-symbols`)
 
 - **`src/i18n/`** - Internationalization
   - `t(key, params?)` for translations with `{placeholder}` support
