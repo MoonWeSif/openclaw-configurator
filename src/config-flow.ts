@@ -171,7 +171,8 @@ async function configureProvider(ctx: MenuContext): Promise<void> {
       provider,
       baseUrl: providerBaseUrl,
       api,
-      models: api ? [{ id: modelSuffix, name: selectedModel.name }] : undefined,
+      // 始终注册模型到 provider 的 models 列表，确保 OpenClaw 识别非内置模型并使用正确协议
+      models: [{ id: modelSuffix, name: selectedModel.name }],
     }),
     createSetApiKey(provider, apiKey),
     createSetModel(selectedModel.key),
