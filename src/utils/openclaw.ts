@@ -88,6 +88,8 @@ const TWELVE_API_MODELS: VendorModel[] = [
   { name: "gemini-3-pro-preview", provider: "google" },
   { name: "gemini-3-flash-preview", provider: "google" },
   { name: "gemini-3.1-pro-preview", provider: "google" },
+  { name: "gemini-3-pro-preview-c", provider: "google" },
+  { name: "gemini-3.1-pro-preview-c", provider: "google" },
 ];
 
 export const VENDOR_FILTERS: Record<string, VendorFilter> = {
